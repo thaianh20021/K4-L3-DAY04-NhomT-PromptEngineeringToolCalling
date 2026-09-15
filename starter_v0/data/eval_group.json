@@ -1,7 +1,98 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "description": "Team-authored IT Helpdesk eval suite with exactly 10 original test cases: 5 single-turn and 5 multi-turn.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wifi_service_check", "phase": "B", "suite": "group",
+      "query": "Hệ thống Wi-Fi văn phòng production hiện có đang gặp sự cố không?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "check_service_status", "args": {"service": "wifi", "environment": "production"}}]},
+      "metadata": {"skill": "route_shared_service", "difficulty": "easy", "what_it_tests": "Trạng thái wifi diện rộng phải gọi check_service_status."}
+    },
+    {
+      "id": "G02_device_hardware_check", "phase": "B", "suite": "group",
+      "query": "Kiểm tra phần cứng của máy tính DT-087 giúp mình.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "DT-087", "check": "hardware"}}]},
+      "metadata": {"skill": "device_check_arg", "difficulty": "medium", "what_it_tests": "Trích đúng asset_id và check=hardware cho thiết bị bàn."}
+    },
+    {
+      "id": "G03_missing_employee_id", "phase": "B", "suite": "group",
+      "query": "Tra cứu xem tài khoản của tôi đang được cấp những thiết bị nào.",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"skill": "missing_identifier", "difficulty": "medium", "what_it_tests": "Thiếu employee_id bắt buộc phải gọi clarify hỏi lại, không được tự đoán."}
+    },
+    {
+      "id": "G04_printing_kb_howto", "phase": "B", "suite": "group",
+      "query": "Tìm tài liệu hướng dẫn xử lý kẹt lệnh in trên máy in tầng 3.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "search_kb", "args": {"category": "printing"}}]},
+      "metadata": {"skill": "route_howto", "difficulty": "easy", "what_it_tests": "Yêu cầu hướng dẫn kỹ thuật phải dùng search_kb với category printing."}
+    },
+    {
+      "id": "G05_out_of_scope_finance", "phase": "B", "suite": "group",
+      "query": "Hướng dẫn tôi lập bảng cân đối kế toán tài chính quý 3.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope", "difficulty": "easy", "what_it_tests": "Yêu cầu ngoài phạm vi IT Helpdesk phải từ chối lịch sự, không gọi tool."}
+    },
+    {
+      "id": "G06_multiturn_clarify_asset", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Laptop của tôi không thể kết nối mạng được."},
+        {"role": "assistant", "content": "Vui lòng cung cấp mã asset của máy tính (ví dụ: LT-204) để tôi kiểm tra."},
+        {"role": "user", "content": "Mã máy là LT-204 nhé."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "LT-204", "check": "network"}}]},
+      "metadata": {"skill": "multiturn_clarify_asset", "difficulty": "medium", "what_it_tests": "Cung cấp mã asset ở lượt sau phải kết hợp kiểm tra network trên asset đó."}
+    },
+    {
+      "id": "G07_multiturn_env_correction", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra dịch vụ SSO trên production giúp mình."},
+        {"role": "assistant", "content": "Hệ thống SSO production đang hoạt động bình thường."},
+        {"role": "user", "content": "À mình nhầm, kiểm tra SSO trên môi trường staging."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "check_service_status", "args": {"service": "sso", "environment": "staging"}}]},
+      "metadata": {"skill": "multiturn_correction", "difficulty": "medium", "what_it_tests": "Người dùng đính chính môi trường ở lượt sau thì phải đổi sang staging."}
+    },
+    {
+      "id": "G08_multiturn_confirmed_ticket", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tạo ticket giúp tôi: hỏng bàn phím trên máy LT-204, ưu tiên high."},
+        {"role": "assistant", "content": "Bạn có chắc chắn muốn tạo ticket hỗ trợ hỏng bàn phím cho LT-204 không?"},
+        {"role": "user", "content": "Đúng vậy, tôi xác nhận tạo ticket này ngay."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "create_ticket", "args": {"asset_id": "LT-204", "priority": "high", "confirmed": true}}]},
+      "metadata": {"skill": "confirmed_action", "difficulty": "hard", "what_it_tests": "Sau khi người dùng xác nhận ở lượt 2 thì cho phép gọi create_ticket với confirmed=true."}
+    },
+    {
+      "id": "G09_multiturn_cancellation", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tạo ticket sửa lỗi Outlook cho máy LT-318."},
+        {"role": "assistant", "content": "Bạn có xác nhận tạo ticket sửa lỗi Outlook cho LT-318 không?"},
+        {"role": "user", "content": "Thôi, tôi tự khởi động lại máy và hết lỗi rồi, hủy không tạo nữa."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"no_tool": true, "behavior": "acknowledge_cancellation"},
+      "metadata": {"skill": "cancellation_handling", "difficulty": "medium", "what_it_tests": "Người dùng hủy hành động thì không được gọi tool create_ticket."}
+    },
+    {
+      "id": "G10_multiturn_user_to_device", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra cứu nhân viên EMP-1007 xem được cấp thiết bị nào."},
+        {"role": "assistant", "content": "Nhân viên Hana Park (EMP-1007) được cấp máy tính DT-087."},
+        {"role": "user", "content": "Kiểm tra toàn bộ tình trạng máy tính đó giúp mình."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "DT-087", "check": "all"}}]},
+      "metadata": {"skill": "context_carryover_asset", "difficulty": "hard", "what_it_tests": "Trích xuất asset_id từ ngữ cảnh lượt trước để kiểm tra thiết bị."}
+    }
+  ]
 }
