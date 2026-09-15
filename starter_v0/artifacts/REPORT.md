@@ -2,7 +2,7 @@
 
 ## Team
 
-- Team: K4-L3-DAY04-NhomT
+- Team: NhomT
 - Members:  Đặng Thái Anh - 2A202602740
             Nguyễn Gia Khánh - 2A202602851
             Phạm Khắc Tú - 2A202602866
