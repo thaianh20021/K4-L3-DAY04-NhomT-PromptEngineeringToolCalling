@@ -2,9 +2,12 @@
 
 ## Team
 
-- Team:
-- Members:
-- Provider/model:
+- Team: K4-L3-DAY04-NhomT
+- Members:  Đặng Thái Anh - 2A202602740
+            Nguyễn Gia Khánh - 2A202602851
+            Phạm Khắc Tú - 2A202602866
+            Thân Thị Kim Chi - 2A202602797
+- Provider/model: GPT5.5
 
 # PHẦN A — Giới thiệu agent
 
@@ -61,7 +64,16 @@ Liệt kê đúng 10 case tự viết: 5 single-turn và 5 multi-turn.
 
 | Case ID | What it tests | Expected behavior | Result |
 |---|---|---|---|
-|  |  |  |  |
+| G01_sso_staging_status | Kiểm tra trạng thái SSO môi trường staging, không nhầm sang production | `check_service_status(service='sso', environment='staging')` | PASS |
+| G02_missing_asset_device_check | Yêu cầu kiểm tra thiết bị nhưng thiếu asset ID phải gọi clarify dạng text thay vì tự đoán | `clarify(response_type='text')` | PASS |
+| G03_external_tools_policy | Yêu cầu chính sách công cụ ngoài phải dùng policy tool với policy_area=external_tools | `policy(policy_area='external_tools')` | PASS |
+| G04_ticket_requires_confirmation | Lệnh tạo ticket luôn phải hỏi xác nhận yes_no trước khi tạo, không được gọi create_ticket ngay | `clarify(response_type='yes_no')` | PASS |
+| G05_out_of_scope_cooking | Câu hỏi không liên quan đến IT helpdesk phải từ chối lịch sự và không gọi tool | `no_tool: true` (refuse) | PASS |
+| GM01_clarify_employee_then_lookup | Lượt đầu thiếu employee ID, lượt hai bổ sung EMP-1005 thì thực hiện lookup_user | `lookup_user(employee_id='EMP-1005')` | PASS |
+| GM02_correct_asset_network | Sửa asset ID ở lượt sau: LT-204 thành LT-240 và giữ check=network | `inspect_device(asset_id='LT-240', check='network')` | PASS |
+| GM03_switch_from_status_to_kb | Chuyển hướng từ check status dịch vụ in sang tìm kiếm knowledge base bài viết in ấn | `search_kb(category='printing')` | PASS |
+| GM04_ticket_change_payload_reconfirm | Khi payload ticket thay đổi priority thì phải tiếp tục dừng ở clarify xác nhận yes_no | `clarify(response_type='yes_no')` | PASS |
+| GM05_parallel_status_wifi_vpn | Gọi song song cả 2 status check wifi và vpn production theo yêu cầu dồn ở 2 lượt | `check_service_status(wifi)` + `check_service_status(vpn)` | PASS |
 
 ## B4. Live chat evidence
 

@@ -6,6 +6,11 @@ __pycache__/
 .env.*
 !.env.example
 /tickets/
-/runs/
+/runs/*
+!/runs/v0_B_base_openrouter_20260915T183614959241.json
+!/runs/v1_B_base_openrouter_20260915T185158128552.json
+!/runs/v2_B_base_openrouter_20260915T185859929639.json
+!/runs/v3_B_base_openrouter_20260915T191321698865.json
+!/runs/v3_B_adversarial_openrouter_20260915T191051711137.json
 /transcripts/
 /analysis/

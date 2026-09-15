@@ -1,7 +1,284 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Original IT helpdesk evaluation suite created by Team K4-L3-DAY04-NhomT. Contains exactly 10 cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_sso_staging_status",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra xem dịch vụ đăng nhập tập trung SSO trên môi trường staging có đang hoạt động tốt không?",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "sso",
+              "environment": "staging"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "service_sso_staging",
+        "difficulty": "easy",
+        "what_it_tests": "Kiểm tra trạng thái SSO môi trường staging, không nhầm sang production."
+      }
+    },
+    {
+      "id": "G02_missing_asset_device_check",
+      "phase": "B",
+      "suite": "group",
+      "query": "Máy tính của mình không vào được mạng nội bộ, kiểm tra giúp card mạng với.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "clarify_missing_asset",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu kiểm tra thiết bị nhưng thiếu asset ID phải gọi clarify dạng text thay vì tự đoán."
+      }
+    },
+    {
+      "id": "G03_external_tools_policy",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm chính sách của công ty về việc sử dụng các công cụ bên ngoài (external tools) và dịch vụ AI.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "external_tools"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "policy_routing",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu chính sách công cụ ngoài phải dùng policy tool với policy_area=external_tools."
+      }
+    },
+    {
+      "id": "G04_ticket_requires_confirmation",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tạo ngay ticket sự cố hỏng màn hình cho máy LT-318 mức độ high.",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "ticket_confirmation_boundary",
+        "difficulty": "medium",
+        "what_it_tests": "Lệnh tạo ticket luôn phải hỏi xác nhận yes_no trước khi tạo, không được gọi create_ticket ngay."
+      }
+    },
+    {
+      "id": "G05_out_of_scope_cooking",
+      "phase": "B",
+      "suite": "group",
+      "query": "Chỉ cho mình cách làm món trà đào cam sả ngon tại nhà.",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "out_of_scope",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi không liên quan đến IT helpdesk phải từ chối lịch sự và không gọi tool."
+      }
+    },
+    {
+      "id": "GM01_clarify_employee_then_lookup",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tra cứu tài khoản của nhân viên quản lý bộ phận Legal giúp mình."
+        },
+        {
+          "role": "user",
+          "content": "Mã nhân viên của bạn ấy là EMP-1005."
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup_user",
+            "args": {
+              "employee_id": "EMP-1005"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_employee_lookup",
+        "difficulty": "medium",
+        "what_it_tests": "Lượt đầu thiếu employee ID, lượt hai bổ sung EMP-1005 thì thực hiện lookup_user."
+      }
+    },
+    {
+      "id": "GM02_correct_asset_network",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Kiểm tra network trên máy LT-204."
+        },
+        {
+          "role": "user",
+          "content": "Nhầm rồi, kiểm tra network cho máy LT-240 mới đúng."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "network"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_asset_correction",
+        "difficulty": "medium",
+        "what_it_tests": "Sửa asset ID ở lượt sau: LT-204 thành LT-240 và giữ check=network."
+      }
+    },
+    {
+      "id": "GM03_switch_from_status_to_kb",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Dịch vụ in ấn printing production có đang bị nghẽn không?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi không cần xem trạng thái nữa, tìm bài viết hướng dẫn kết nối máy in văn phòng cho mình."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "search_kb",
+            "args": {
+              "category": "printing"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_switch_intent",
+        "difficulty": "hard",
+        "what_it_tests": "Chuyển hướng từ check status dịch vụ in sang tìm kiếm knowledge base bài viết in ấn."
+      }
+    },
+    {
+      "id": "GM04_ticket_change_payload_reconfirm",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tạo ticket lỗi bàn phím cho laptop LT-318 mức priority low."
+        },
+        {
+          "role": "user",
+          "content": "Đổi lại priority thành critical giúp mình vì máy này của sếp, và cho mình xác nhận trước khi gửi."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_reconfirm_payload",
+        "difficulty": "hard",
+        "what_it_tests": "Khi payload ticket thay đổi priority thì phải tiếp tục dừng ở clarify xác nhận yes_no."
+      }
+    },
+    {
+      "id": "GM05_parallel_status_wifi_vpn",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Hôm nay mạng văn phòng chập chờn quá, kiểm tra dịch vụ wifi production xem sao."
+        },
+        {
+          "role": "user",
+          "content": "Tiện thể kiểm tra luôn cả dịch vụ vpn production nữa nhé, đừng bỏ cái nào."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          },
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "vpn",
+              "environment": "production"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_parallel_status",
+        "difficulty": "hard",
+        "what_it_tests": "Gọi song song cả 2 status check wifi và vpn production theo yêu cầu dồn ở 2 lượt."
+      }
+    }
+  ]
 }
