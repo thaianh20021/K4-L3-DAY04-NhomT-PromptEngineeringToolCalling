@@ -3,7 +3,7 @@
 ## Team
 
 - Team: NhomT
-- Members: 4
+- Members: Đặng Thái Anh - 2A202602740 Nguyễn Gia Khánh - 2A202602851 Phạm Khắc Tú - 2A202602866 Thân Thị Kim Chi - 2A202602797
 - Provider/model: gemini / gemini-3.6-flash
 
 # PHẦN A — Giới thiệu agent
@@ -157,16 +157,16 @@ Nhóm NhomT đã hoàn thành toàn diện các yêu cầu của bài Lab Day 04
 
 ## C2. Self-reflection của từng thành viên
 
-### Thành viên 1: Trưởng nhóm & Kiến trúc hệ thống
+### Đặng Thái Anh — 2A202602740 (Trưởng nhóm & Kiến trúc hệ thống)
 - **Vai trò/phần việc được nhận:** Quản lý dự án, thiết kế kiến trúc tổng thể, tích hợp provider Gemini và tối ưu hóa vòng lặp `run_model_tool_loop`.
 - **Những gì tôi đã thay đổi trong repo chung:** Cấu hình môi trường `.env`, tích hợp Gemini 3.6 Flash trong `providers/gemini_provider.py`, bổ sung cơ chế retry backoff xử lý rate limit 429, quản trị nhánh Git chung.
-- **File hoặc artifact liên quan:** `providers/gemini_provider.py`, `env_loader.py`, `TEAMMATES.md`.
+- **File hoặc artifact liên quan:** `providers/gemini_provider.py`, `env_loader.py`.
 - **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Quyết định nâng cấp mặc định lên `gemini-3.6-flash` và chèn exponential backoff trong provider adapter để khắc phục triệt để lỗi nghẽn quota 20 lượt/ngày của bản preview.
 - **Khó khăn tôi gặp và cách tôi xử lý:** Lỗi kết nối API ban đầu do thiếu biến môi trường; tôi đã bổ sung script kiểm tra và hướng dẫn nạp tự động qua `env_loader`.
 - **Điều tôi học được từ phần việc này:** Hiểu sâu về cơ chế structured tool calling và cách quản lý quota API trong hệ thống production.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Xây dựng thêm bộ caching cục bộ để giảm thiểu số lượng request trùng lặp ra ngoài API.
 
-### Thành viên 2: Kỹ sư Prompt & Tool Schema
+### Nguyễn Gia Khánh — 2A202602851 (Kỹ sư Prompt & Tool Schema)
 - **Vai trò/phần việc được nhận:** Thiết kế và tinh chỉnh `system_prompt.md` và `tools.yaml` qua các phiên bản v1, v2, v3.
 - **Những gì tôi đã thay đổi trong repo chung:** Viết lại toàn bộ chỉ dẫn hệ thống trong `system_prompt.md`, chuẩn hóa schema, mô tả tham số và enum trong `tools.yaml`.
 - **File hoặc artifact liên quan:** `artifacts/system_prompt.md`, `artifacts/tools.yaml`, `artifacts/version_log.csv`.
@@ -175,7 +175,7 @@ Nhóm NhomT đã hoàn thành toàn diện các yêu cầu của bài Lab Day 04
 - **Điều tôi học được từ phần việc này:** Tool description và parameter schema chính là một phần của prompt hệ thống; chất lượng của schema quyết định trực tiếp khả năng chọn đúng tool.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Viết thêm các ví dụ few-shot cô đọng trong prompt để tăng độ chính xác định dạng tham số.
 
-### Thành viên 3: Chuyên viên Đánh giá & An toàn Thông tin (Red-Teaming)
+### Phạm Khắc Tú — 2A202602866 (Chuyên viên Đánh giá & An toàn Thông tin)
 - **Vai trò/phần việc được nhận:** Xây dựng bộ test case của nhóm, chạy kiểm thử đánh giá, phân tích lỗi và kiểm tra ranh giới bảo mật adversarial.
 - **Những gì tôi đã thay đổi trong repo chung:** Thiết kế 10 test case hoàn chỉnh trong `data/eval_group.json`, thực hiện phân tích các ca tấn công trong `data/eval_adversarial.json`.
 - **File hoặc artifact liên quan:** `data/eval_group.json`, `data/eval_adversarial.json`, `run_eval.py`.
@@ -184,8 +184,8 @@ Nhóm NhomT đã hoàn thành toàn diện các yêu cầu của bài Lab Day 04
 - **Điều tôi học được từ phần việc này:** Tầm quan trọng của kiểm thử hai lớp: vừa dùng prompt guardrails, vừa có validation nghiêm ngặt tại mã nguồn Python của tool.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Mở rộng thêm các kịch bản kiểm thử gián tiếp qua tài liệu giả mạo (indirect prompt injection).
 
-### Thành viên 4: Kỹ sư Giao diện & Tích hợp (UI/UX)
-- **Vai trò/phển việc được nhận:** Xây dựng ứng dụng giao diện web Streamlit, hiển thị trực quan các bước gọi tool và hỗ trợ người dùng tương tác.
+### Thân Thị Kim Chi — 2A202602797 (Kỹ sư Giao diện & Tích hợp)
+- **Vai trò/phần việc được nhận:** Xây dựng ứng dụng giao diện web Streamlit, hiển thị trực quan các bước gọi tool và hỗ trợ người dùng tương tác.
 - **Những gì tôi đã thay đổi trong repo chung:** Phát triển toàn bộ mã nguồn file `app.py`, thiết lập giao diện chat, khối mở rộng hiển thị tool traces và version artifact.
 - **File hoặc artifact liên quan:** `app.py`, `requirements.txt`.
 - **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tái sử dụng trực tiếp hàm `run_model_tool_loop` từ `chat.py` trong ứng dụng Streamlit để đảm bảo tính nhất quán 100% giữa CLI, đánh giá eval và giao diện người dùng.
