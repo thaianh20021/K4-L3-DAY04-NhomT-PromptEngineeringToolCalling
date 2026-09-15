@@ -197,7 +197,7 @@ Nhóm NhomT đã hoàn thành toàn diện các yêu cầu của bài Lab Day 04
 
 Chỉ nộp bài khi mọi mục dưới đây đã được kiểm tra trên branch cuối cùng của repository chung:
 
-- [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
+- [x] Danh sách thành viên nhóm có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
 - [x] Phần reflection chung của nhóm đã hoàn thành và có evidence.
 - [x] Mỗi thành viên đã tự viết và commit self-reflection của mình.
