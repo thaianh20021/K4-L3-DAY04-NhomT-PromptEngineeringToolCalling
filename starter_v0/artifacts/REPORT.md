@@ -246,13 +246,33 @@ có thể đối chiếu đóng góp.
 
 ### Thân Thị Kim Chi - 2A202602797
 
-- **Vai trò:** Team eval, Web UI và report evidence.
-- **Artifact phụ trách:** `data/eval_group.json`, `ui/`,
-  `artifacts/REPORT.md`.
-- **Quyết định kỹ thuật:** Tái sử dụng `run_model_tool_loop` để UI và evaluator
-  quan sát cùng một agent behavior.
-- **Bài học:** UI cần hiện tool args, result/error và artifact version để trace
-  có thể review được.
+- **Vai trò:** Team eval, Web UI Studio và tổng hợp evidence cho báo cáo.
+- **Artifact phụ trách:** `data/eval_group.json`, `ui/` (`server.py`, `static/`),
+  `artifacts/REPORT.md` (Mục B3, B4, C2).
+- **Đóng góp chính:**
+  - Thiết kế và hoàn thiện bộ 10 test case original trong `data/eval_group.json`
+    (5 single-turn G01-G05 và 5 multi-turn GM01-GM05) bao phủ các ranh giới:
+    kiểm tra dịch vụ staging/prod, bắt buộc clarify khi thiếu ID, tra cứu policy,
+    dừng xin xác nhận trước khi tạo ticket, từ chối out-of-scope, sửa tham số
+    và đổi ý định qua nhiều lượt.
+  - Xây dựng và kiểm thử Web UI Studio (`ui/`), kết nối trực tiếp với backend
+    HTTP server, trực quan hóa tiến trình gọi tool, payload arguments, kết quả
+    thực thi và thẻ giao diện OpenUI.
+  - Tổng hợp bảng test case mục B3, đối chiếu bằng chứng live chat mục B4 và
+    hoàn thiện báo cáo kỹ thuật.
+- **Quyết định kỹ thuật:**
+  - Tái sử dụng trực tiếp hàm `run_model_tool_loop` từ `chat.py` trong
+    `ui/server.py` để Web UI và evaluator cùng quan sát một hành vi agent đồng
+    nhất, không tạo loop riêng gây sai lệch kết quả.
+  - Trực quan hóa chi tiết tool trace trên giao diện: hiển thị rõ tên tool,
+    arguments gửi đi, `tool_results` hoặc error, số round hội thoại và hash phiên
+    bản prompt/tools để có thể audit hành vi mô hình minh bạch.
+- **Bài học kinh nghiệm:**
+  - UI cho AI agent bắt buộc phải hiển thị được tool trace (args, result/error,
+    version hash) thì người vận hành mới kiểm tra được model có thực sự gọi đúng
+    tool và đúng dữ liệu hay không.
+  - Thiết kế eval suite cần cô lập rõ từng failure mode; đối với multi-turn,
+    phải kiểm tra nghiêm ngặt việc vô hiệu hóa xác nhận cũ khi payload thay đổi.
 
 Phân công trên là phạm vi làm việc của nhóm. Mỗi thành viên vẫn cần tự review
 phần reflection của mình và tạo ít nhất một commit bằng Git identity riêng.
@@ -269,7 +289,7 @@ repository chung:
 - [ ] `TEAMMATES.md` có đủ GitHub username của cả bốn thành viên.
 - [ ] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
 - [x] Phần reflection chung của nhóm đã hoàn thành và có evidence.
-- [ ] Mỗi thành viên đã tự viết và commit self-reflection của mình.
+- [x] Mỗi thành viên đã tự viết và commit self-reflection của mình.
 - [x] Prompt, tools, version log, base/adversarial runs, eval, UI và report đã
       có trong repository; transcript chưa được track.
 - [x] Không có `.env`, API key, token, cache hoặc generated ticket trong commit.
