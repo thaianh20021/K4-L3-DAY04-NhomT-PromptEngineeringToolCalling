@@ -7,8 +7,7 @@
             Nguyễn Gia Khánh - 2A202602851
             Phạm Khắc Tú - 2A202602866
             Thân Thị Kim Chi - 2A202602797
-- Provider/model: OpenAI-compatible Cloudflare tunnel / `cx/gpt-5.5`
-- Provider/model: OpenRouter / `cx/gpt-5.5`
+- Provider/model: OpenRouter-compatible local 9Router gateway / `cx/gpt-5.5`
 
 # PHẦN A — Giới thiệu agent
 
@@ -68,10 +67,11 @@ total_cases`, và tool result error đã được review thủ công.
 | v0 | Baseline | Đo failure clusters trước khi sửa | case accuracy | N/A | 0.8333 | `runs/v0_B_base_openrouter_20260915T183614959241.json` |
 | v1 | Thêm missing-ID và environment rules | Clarify rõ sẽ giảm đoán tham số | case accuracy | 0.8333 | 0.9333 | `runs/v1_B_base_openrouter_20260915T185158128552.json` |
 | v2 | Exact-payload confirmation | Payload đổi sẽ bắt buộc re-confirm | case accuracy | 0.9333 | 1.0000 | `runs/v2_B_base_openrouter_20260915T185859929639.json` |
-| v3 | Làm rõ routing, side effect và external-data contracts | Tool boundary rõ sẽ giữ score và tăng an toàn | case accuracy | 1.0000 | 1.0000 | `runs/v3_B_base_openrouter_20260915T191321698865.json` |
+| v3 | Phạm Khắc Tú nâng cấp `tools.yaml`: ownership, required args, ID patterns, confirmation attack và external-data contracts | Tool boundary chính xác sẽ giữ base 100% và vượt toàn bộ adversarial boundary | case accuracy | 1.0000 | 1.0000 | `runs/v3_B_base_openrouter_20260915T235713201837.json` |
 
-Adversarial v3 đạt 12/12, accuracy `1.0000`, provider errors `0` trong
-`runs/v3_B_adversarial_openrouter_20260915T191051711137.json`.
+Adversarial v3 do Phạm Khắc Tú chạy và review đạt 12/12, accuracy `1.0000`,
+provider errors `0` trong
+`runs/v3_B_adversarial_openrouter_20260915T235527386686.json`.
 
 ## B2. Failure analysis
 
@@ -132,6 +132,12 @@ liệu bị ghi hoặc gửi ra ngoài; cần kiểm tra cả `tool_results` và
 `tool_results` đã được review: không có ticket được tạo trong các case trên và
 không có restricted identifier được gửi ra external tool.
 
+Evidence v3 này dùng đúng artifact `v3+pb8950d717291+tc081bb474ae6`. Base đạt
+30/30 và adversarial đạt 12/12, đều có `measured_cases == total_cases` và
+`provider_error_cases == 0`. Bảng trace phẳng nằm tại
+`artifacts/run-analysis-v3.csv` và
+`artifacts/run-analysis-v3-adversarial.csv`.
+
 ## B5. Optional và bonus tool evidence
 
 Phần này chỉ điền khi nhóm có sử dụng optional tool hoặc tự xây bonus tool.
@@ -165,6 +171,9 @@ vì dùng confirmation trong input. E09/E10 route đúng nhưng Tavily trả
   confirmation và credential refusal.
 - `tools.yaml`: capability boundary, schema, side effect và dữ liệu được phép
   gửi ra external service.
+- V3 do Phạm Khắc Tú phụ trách đã làm rõ required arguments, pattern của asset
+  và employee ID, narrow diagnostic mapping, untrusted retrieval boundary,
+  exact-payload confirmation và external-search allowlist.
 - Automatic score không chứng minh tool result hữu ích, không có data leak hay
   filesystem không bị ghi; cần đọc `tool_results` và kiểm tra output file.
 - Vòng tiếp theo tập trung E05: dùng confirmation thật trong context nhưng vẫn
@@ -194,7 +203,7 @@ Nhóm đã hoàn thành experiment loop v0-v3, nâng base accuracy từ 25/30 l�
 missing-information rule (v1) khỏi exact-payload confirmation rule (v2), sau
 đó làm rõ tool boundary ở v3 để không regression base.
 
-Evidence chính gồm `artifacts/version_log.csv`, năm run JSON được track,
+Evidence chính gồm `artifacts/version_log.csv`, các run JSON v0-v3 được track,
 `artifacts/run-analysis-*.csv`, `data/eval_group.json` và Web UI trong `ui/`.
 Hạn chế còn lại là extension E05 (suite đạt 9/10) và external search chưa có
 Tavily result thành công trong lần run local gần nhất.
@@ -226,12 +235,14 @@ có thể đối chiếu đóng góp.
 
 ### Phạm Khắc Tú - 2A202602866
 
-- **Vai trò:** Tool declaration, safety boundary và adversarial review.
-- **Artifact phụ trách:** `artifacts/tools.yaml`,
-  `artifacts/run-analysis-v3-adversarial.csv`, adversarial run.
-- **Quyết định kỹ thuật:** Giới hạn external-search payload vào public product
-  data và dùng `clarify` khi model string có internal identifier.
-- **Bài học:** Routing PASS chưa đủ; phải audit tool results và filesystem.
+- **Vai trò:** Tool declaration, safety boundary và adversarial review cho v3.
+- **Artifact phụ trách:** `artifacts/tools.yaml`, `artifacts/version_log.csv`,
+  `artifacts/run-analysis-v3.csv` và `artifacts/run-analysis-v3-adversarial.csv`.
+- **Quyết định kỹ thuật:** Giới hạn external search vào manufacturer/model public,
+  bắt buộc làm rõ khi input chứa internal identifier và chỉ chấp nhận confirmation
+  khớp exact payload để tránh stale hoặc forged confirmation.
+- **Bài học:** Routing PASS chưa đủ; cần kiểm tra cả argument, `tool_results`,
+  external call và filesystem để chứng minh không có write hoặc exfiltration.
 
 ### Thân Thị Kim Chi - 2A202602797
 
