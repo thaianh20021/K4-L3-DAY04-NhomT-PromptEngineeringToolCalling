@@ -3,7 +3,10 @@
 ## Team
 
 - Team: Nhom T
-- Members: xem `../../TEAMMATES.md`
+- Members: Dang Thai Anh	2A202602740	
+Nguyen Gia Khanh	2A202602851	
+Pham Khac Tu	2A202602866	TuTu99999	
+Than Thi Kim Chi	2A202602797
 - Provider/model: OpenRouter / `cx/gpt-5.5`
 
 # PHẦN A — Giới thiệu agent
