@@ -8,22 +8,5 @@ __pycache__/
 # Secrets — never commit real keys
 .env
 .env.*
-!.env.example
+.env.example
 
-# Instructor-only — must NOT ship to the public student repo
-INTERNAL-DEMO-SCRIPT.md
-INSTRUCTOR-GUIDE.md
-starter/
-starter_v0/tests/
-
-# Local action/scratch output
-/starter_v0/tickets/
-/starter_v0/runs/
-/starter_v0/transcripts/
-/starter_v0/analysis/
-
-# OS / editor
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/

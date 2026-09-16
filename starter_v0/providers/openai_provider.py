@@ -15,11 +15,12 @@ class OpenAIProvider:
         *,
         api_key_env: str = "OPENAI_API_KEY",
         base_url: str | None = None,
-        default_model: str = "gpt-4o-mini",
+        default_model: str | None = None,
     ) -> None:
         self.api_key_env = api_key_env
-        self.base_url = base_url
-        self.default_model = default_model
+        self.base_url = base_url or os.getenv("OPENAI_BASE_URL")
+        self.default_model = default_model or os.getenv("LLM_MODEL", "gpt-4o-mini")
+
 
     def complete(
         self,

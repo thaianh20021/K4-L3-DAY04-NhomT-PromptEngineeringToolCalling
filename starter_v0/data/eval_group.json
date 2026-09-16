@@ -1,7 +1,281 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Original team-designed IT helpdesk evaluation suite. Contains exactly 10 cases: 5 single-turn and 5 multi-turn covering missing identifiers, KB routing, environment switching, context carry-over, action cancellation, and write boundary control.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_missing_asset_id",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra tình trạng pin và ổ cứng laptop giúp mình với.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "clarify_missing_asset",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu chẩn đoán thiết bị nhưng thiếu asset_id phải gọi clarify."
+      }
+    },
+    {
+      "id": "G02_route_printing_kb",
+      "phase": "B",
+      "suite": "group",
+      "query": "Cho mình hỏi cách xóa hàng đợi in (printer spooler) bị kẹt trên Windows.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "search_kb",
+            "args": {
+              "category": "printing"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "route_kb_printing",
+        "difficulty": "medium",
+        "what_it_tests": "Hướng dẫn kỹ thuật máy in phải gọi search_kb với category printing."
+      }
+    },
+    {
+      "id": "G03_out_of_scope_weather",
+      "phase": "B",
+      "suite": "group",
+      "query": "Thời tiết tại Hà Nội hôm nay thế nào?",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "out_of_scope_general",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi thời tiết ngoài phạm vi IT Helpdesk không được gọi tool."
+      }
+    },
+    {
+      "id": "G04_staging_sso_status",
+      "phase": "B",
+      "suite": "group",
+      "query": "Kiểm tra xem dịch vụ đăng nhập một lần SSO trên môi trường staging có bình thường không.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "sso",
+              "environment": "staging"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "sso_staging_status",
+        "difficulty": "medium",
+        "what_it_tests": "Trích xuất đúng service sso và environment staging."
+      }
+    },
+    {
+      "id": "G05_format_existing_findings",
+      "phase": "B",
+      "suite": "group",
+      "query": "Trình bày các phát hiện sau thành báo cáo tóm tắt với tiêu đề 'Sự cố Wi-Fi DT-087': Wi-Fi SIGNAL_WEAK, Gateway UNREACHABLE.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "brief",
+              "incident_title": "Sự cố Wi-Fi DT-087"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "format_findings",
+        "difficulty": "medium",
+        "what_it_tests": "Định dạng findings đã có thành báo cáo brief mà không gọi tool inspect."
+      }
+    },
+    {
+      "id": "G06_clarify_then_inspect_device",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Laptop của mình bị lỗi kết nối mạng."
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn cho mình xin mã asset của máy (ví dụ LT-204) nhé."
+        },
+        {
+          "role": "user",
+          "content": "Máy mình là LT-318, kiểm tra mạng giúp mình."
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-318",
+              "check": "network"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_clarify_then_inspect",
+        "difficulty": "medium",
+        "what_it_tests": "Bổ sung asset_id ở lượt sau để hoàn thành inspect_device."
+      }
+    },
+    {
+      "id": "G07_correction_service_and_environment",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Kiểm tra trạng thái dịch vụ Wi-Fi production."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, mình muốn kiểm tra dịch vụ email trên staging mới đúng."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "email",
+              "environment": "staging"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_service_correction",
+        "difficulty": "medium",
+        "what_it_tests": "Cập nhật cả service và environment theo yêu cầu sửa mới nhất."
+      }
+    },
+    {
+      "id": "G08_cancel_action_and_ask_capabilities",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Kiểm tra phần cứng máy LT-204."
+        },
+        {
+          "role": "user",
+          "content": "Thôi mình giải quyết được rồi, không cần kiểm tra nữa."
+        },
+        {
+          "role": "user",
+          "content": "Cho mình biết bạn có thể hỗ trợ những vấn đề IT nào."
+        }
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "skill": "multiturn_cancel_action",
+        "difficulty": "medium",
+        "what_it_tests": "Hủy yêu cầu trước đó và trả lời câu hỏi năng lực mà không gọi tool."
+      }
+    },
+    {
+      "id": "G09_employee_lookup_then_asset_inspect",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tra cứu nhân viên EMP-1002 xem được cấp thiết bị nào."
+        },
+        {
+          "role": "assistant",
+          "content": "Nhân viên EMP-1002 được cấp laptop LT-204."
+        },
+        {
+          "role": "user",
+          "content": "Kiểm tra tình trạng bảo mật trên máy LT-204 của nhân viên đó."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-204",
+              "check": "security"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_context_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "Kế thừa thiết bị từ lượt trước để gọi inspect_device check=security."
+      }
+    },
+    {
+      "id": "G10_ticket_refusal_before_confirmation",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tạo ticket sự cố in ấn máy DT-031 mức medium."
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn có chắc chắn muốn tạo ticket sự cố in ấn cho DT-031 mức medium không?"
+        },
+        {
+          "role": "user",
+          "content": "Khoan đã đừng tạo vội, để mình kiểm tra lại dây cáp trước."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "skill": "multiturn_refuse_ticket",
+        "difficulty": "hard",
+        "what_it_tests": "Người dùng hoãn/từ chối xác nhận thì không được gọi create_ticket."
+      }
+    }
+  ]
 }

@@ -1,0 +1,8 @@
+{
+  "ticket_id": "LAB-B1933AC8",
+  "summary": "Sự cố Wi-Fi trên thiết bị LT-240",
+  "priority": "high",
+  "asset_id": "LT-240",
+  "created_at": "2026-09-16T01:05:14.737793+00:00",
+  "source": "educational_local_mock"
+}

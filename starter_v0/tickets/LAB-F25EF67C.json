@@ -1,0 +1,8 @@
+{
+  "ticket_id": "LAB-F25EF67C",
+  "summary": "Sự cố Wi-Fi trên LT-240",
+  "priority": "high",
+  "asset_id": "LT-240",
+  "created_at": "2026-09-16T00:17:28.280044+00:00",
+  "source": "educational_local_mock"
+}

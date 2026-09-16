@@ -1,0 +1,8 @@
+{
+  "ticket_id": "LAB-548FD717",
+  "summary": "Lỗi VPN trên máy LT-204",
+  "priority": "high",
+  "asset_id": "LT-204",
+  "created_at": "2026-09-16T00:27:32.793774+00:00",
+  "source": "educational_local_mock"
+}

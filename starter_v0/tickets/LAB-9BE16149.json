@@ -1,0 +1,8 @@
+{
+  "ticket_id": "LAB-9BE16149",
+  "summary": "VPN lỗi AUTH_TIMEOUT",
+  "priority": "high",
+  "asset_id": "LT-204",
+  "created_at": "2026-09-16T01:05:02.561132+00:00",
+  "source": "educational_local_mock"
+}

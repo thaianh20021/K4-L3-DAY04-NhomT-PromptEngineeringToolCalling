@@ -1,0 +1,8 @@
+{
+  "ticket_id": "LAB-B490877F",
+  "summary": "Sự cố Wi-Fi",
+  "priority": "high",
+  "asset_id": "LT-240",
+  "created_at": "2026-09-16T00:51:01.878252+00:00",
+  "source": "educational_local_mock"
+}
