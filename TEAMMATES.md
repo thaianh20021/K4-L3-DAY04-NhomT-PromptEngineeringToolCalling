@@ -5,7 +5,7 @@
 | Dang Thai Anh | 2A202602740 | `thaianh20021` | Truong nhom, Git integration, provider configuration, final QA |
 | Nguyen Gia Khanh | 2A202602851 | Chua cung cap | Prompt engineering va failure analysis v0-v2 |
 | Pham Khac Tu | 2A202602866 | `TuTu99999` | Owner tools.yaml; thiet ke safety boundary; chay va review v3 base/adversarial evidence |
-| Than Thi Kim Chi | 2A202602797 | Chua cung cap | Team eval, Web UI va report evidence |
+| Than Thi Kim Chi | 2A202602797 | 'kchi24' | Team eval, Web UI va report evidence |
 
 ## Nguyen tac contribution
 
